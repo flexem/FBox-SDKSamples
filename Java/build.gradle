@@ -1,0 +1,42 @@
+group 'FlexEm'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'lib'
+    }
+    maven {
+        url 'http://maven.flexem.net/repos/snapshots/'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
+    compile  group: 'com.github.fryderykhuang', name: 'signalr4j', version: '3.0.1-SNAPSHOT'
+//    compile name: "signalr-client-sdk"
+    //compile fileTree(dir: 'lib', include: '*.jar')
+    compile 'com.google.code.gson:gson:2.4'
+}
+
+jar {
+    manifest {
+        attributes 'Class-Path': configurations.compile.collect { it.getName() }.join(' ')
+        attributes 'Main-Class': "Main"
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+//task publish(type:Copy){
+//    dependsOn build
+//    from configurations.runtime
+////    include '*.jar'
+//    into "$buildDir/libs"
+//}
